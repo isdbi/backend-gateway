@@ -1,0 +1,17 @@
+server:
+  port: 8080
+  host: "localhost"
+
+database:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "arty123"  # Set via environment variable ARTY_DATABASE_PASSWORD
+  name: "isdb"
+
+redis:
+  host: "localhost"
+  port: 6379
+  password: ""  # Set via environment variable ARTY_REDIS_PASSWORD
+  db: 0
+

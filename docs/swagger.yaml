@@ -1,0 +1,204 @@
+basePath: /api/v1
+definitions:
+  api.Map:
+    additionalProperties: true
+    type: object
+  handler.ActivationRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      otp:
+        example: "123456"
+        type: string
+    type: object
+  handler.LoginRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      password:
+        example: securepassword123
+        type: string
+    type: object
+  handler.SignupRequest:
+    properties:
+      age:
+        example: 25
+        type: integer
+      email:
+        example: user@example.com
+        type: string
+      family_name:
+        example: Doe
+        type: string
+      name:
+        example: John
+        type: string
+      password:
+        example: securepassword123
+        type: string
+    type: object
+  handler.VerificationEmailRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /activate:
+    post:
+      consumes:
+      - application/json
+      description: Verify user's email with OTP code
+      parameters:
+      - description: Email and OTP
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.ActivationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Map'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Map'
+      summary: Activate user account
+      tags:
+      - auth
+  /google/callback:
+    get:
+      description: Handles Google OAuth callback and returns user info
+      parameters:
+      - description: OAuth code from Google
+        in: query
+        name: code
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Map'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Map'
+      summary: Google OAuth callback
+      tags:
+      - auth
+  /google/login:
+    get:
+      description: Redirects to Google OAuth consent screen
+      responses:
+        "302":
+          description: Redirect to Google OAuth
+      summary: Google OAuth login
+      tags:
+      - auth
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return access tokens
+      parameters:
+      - description: Login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Map'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Map'
+      summary: User login
+      tags:
+      - auth
+  /send-verification:
+    post:
+      consumes:
+      - application/json
+      description: Send email with verification code to user's email address
+      parameters:
+      - description: User email
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.VerificationEmailRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Map'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Map'
+      summary: Send verification email
+      tags:
+      - auth
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user
+      parameters:
+      - description: User registration data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.SignupRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/api.Map'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Map'
+      summary: User registration
+      tags:
+      - auth
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"
